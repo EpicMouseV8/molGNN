@@ -13,18 +13,18 @@ chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
 
 data = preprocess.featurize(chromophores, solvents, targetsVal, model_name="abs_maxfp128_smiles")
 
-# train.run_training(data, epochs=1200, target_names=targets, model_name="abs_ems_maxfp128")
+train.run_training(data, epochs=3000, target_names=targets, model_name="abs_ems_maxfp128")
 
 
 # test
-node_feature_dim = data[0].num_node_features
-edge_feature_dim = data[0].num_edge_features
-solvent_feature_dim = data[0].solvent_fingerprint.size(0)
-output_dim = 1
-model = model.ChromophoreSolventTransformerGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
+# node_feature_dim = data[0].num_node_features
+# edge_feature_dim = data[0].num_edge_features
+# solvent_feature_dim = data[0].solvent_fingerprint.size(0)
+# output_dim = 1
+# model = model.ChromophoreSolventTransformerGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
 
-model_path = 'models/transformer_abs_maxfp128/transformer_abs_maxfp128epoch_1200.pth'
-model.load_state_dict(torch.load(model_path))
+# model_path = 'models/transformer_abs_maxfp128/transformer_abs_maxfp128epoch_1200.pth'
+# model.load_state_dict(torch.load(model_path))
 
 
 # training and validation sets
