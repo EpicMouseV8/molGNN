@@ -1,0 +1,4 @@
+data/processed/
+models/
+bad_smiles.csv
+.venv

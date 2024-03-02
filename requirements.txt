@@ -1,0 +1,5 @@
+python version 3.12.1
+
+rdkit-2023.9.5
+deepchem
+torch
