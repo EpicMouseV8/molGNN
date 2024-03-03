@@ -67,7 +67,7 @@ def run_training(data, epochs, target_names, model_name):
     solvent_feature_dim = data[0].solvent_fingerprint.size(0)
     output_dim = num_targets
 
-    model = ChromophoreSolventGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
+    model = ChromophoreSolventTransformerGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
 
     optimizer = Adam(model.parameters(), lr=0.001)
     loss_fn = MSELoss()

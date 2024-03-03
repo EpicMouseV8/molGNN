@@ -13,7 +13,7 @@ chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
 
 data = preprocess.featurize(chromophores, solvents, targetsVal, model_name="abs_maxfp128_smiles")
 
-train.run_training(data, epochs=3000, target_names=targets, model_name="abs_ems_maxfp128")
+train.run_training(data, epochs=3000, target_names=targets, model_name="abs_max_transformerfp128")
 
 
 # test
