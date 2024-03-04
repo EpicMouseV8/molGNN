@@ -4,16 +4,16 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from torch_geometric.data import DataLoader
 
-targets = ["Absorption max (nm)"]
+targets = ["Quantum yield"]
 file_path = 'data/raw/prep2.csv'
 
 df = pd.read_csv(file_path)
 
 chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
 
-data = preprocess.featurize(chromophores, solvents, targetsVal, model_name="abs_maxfp128_smiles")
+data = preprocess.featurize(chromophores, solvents, targetsVal, save_filename="qy128_transformer")
 
-train.run_training(data, epochs=3000, target_names=targets, model_name="abs_max_transformerfp128")
+train.run_training(data, epochs=3500, target_names=targets, model_name="qyfp128_transformer")
 
 
 # test

@@ -112,3 +112,47 @@ class ChromophoreSolventTransformerGNN(torch.nn.Module):
         x = self.fc2(x)
 
         return x
+    
+class DoubleGraphGNN(torch.nn.Module):
+    def __init__(self, node_feature_dim, edge_feature_dim, output_dim, dropout_rate=0.3):
+        super(DoubleGraphGNN, self).__init__()
+
+        self.conv1_chromophore = GCNConv(node_feature_dim, 128)
+        self.bn1_chromophore = BatchNorm1d(128)
+        self.conv2_chromophore = GCNConv(128, 64)
+        self.bn2_chromophore = BatchNorm1d(64)
+
+        self.conv1_solvent = GCNConv(node_feature_dim, 128)
+        self.bn1_solvent = BatchNorm1d(128)
+        self.conv2_solvent = GCNConv(128, 64)
+        self.bn2_solvent = BatchNorm1d(64)
+
+        self.fc1 = Linear(64 * 2, 64)
+        self.bn_fc1 = BatchNorm1d(64)
+        self.dropout = Dropout(dropout_rate)
+        self.fc2 = Linear(64, output_dim)
+
+    def forward(self, data):
+        x_chromophore, edge_index_chromophore, edge_attr_chromophore, x_solvent, edge_index_solvent, edge_attr_solvent, batch = data.x_chromophore, data.edge_index_chromophore, data.edge_attr_chromophore, data.x_solvent, data.edge_index_solvent, data.edge_attr_solvent, data.batch
+        
+        # Process the graph with dropout and batch normalization
+        x_chromophore = F.relu(self.bn1_chromophore(self.conv1_chromophore(x_chromophore, edge_index_chromophore)))
+        x_chromophore = F.relu(self.bn2_chromophore(self.conv2_chromophore(x_chromophore, edge_index_chromophore)))
+
+        x_solvent = F.relu(self.bn1_solvent(self.conv1_solvent(x_solvent, edge_index_solvent)))
+        x_solvent = F.relu(self.bn2_solvent(self.conv2_solvent(x_solvent, edge_index_solvent)))
+
+        # Global pooling to get graph-level representation
+        x_chromophore = global_mean_pool(x_chromophore, batch)
+        x_solvent = global_mean_pool(x_solvent, batch)
+
+        # Combine features
+        x = torch.cat([x_chromophore, x_solvent], dim=1)
+
+        # Apply batch normalization and dropout before the final fully connected layers
+        x = self.dropout(F.relu(self.bn_fc1(self.fc1(x))))
+        x = self.fc2(x)
+
+        return x
+
+
