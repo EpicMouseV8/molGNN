@@ -6,7 +6,7 @@ from torch.optim import Adam
 from torch.nn import MSELoss
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from model import ChromophoreSolventGNN, ChromophoreSolventTransformerGNN, DoubleGraphGNN
+from model import ChromophoreSolventGNN, ChromophoreSolventTransformerGNN, DoubleGraphGNN, ChromophoreSolventTransformerGNN_GAP_GMP
 import os
 import matplotlib.pyplot as plt
 
@@ -157,7 +157,7 @@ def run_training(data, epochs, target_names, model_name):
     solvent_feature_dim = data[0].solvent_fingerprint.size(0)
     output_dim = num_targets
 
-    model = ChromophoreSolventTransformerGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
+    model = ChromophoreSolventTransformerGNN_GAP_GMP(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
 
     optimizer = Adam(model.parameters(), lr=0.001)
     loss_fn = MSELoss()
@@ -206,7 +206,7 @@ def test_model(model, test_loader, num_targets, target_names, solvent_feature_di
     predictions = []
     actuals = []
 
-    bad_smiles = []
+    # bad_smiles = []
 
     with torch.no_grad():
         for data in test_loader:
@@ -217,13 +217,7 @@ def test_model(model, test_loader, num_targets, target_names, solvent_feature_di
             actual = data.y.view(-1, 1).cpu().numpy()  # Adjust shape as necessary
 
             # Calculate error; adjust this based on your specific needs
-            error = np.abs(prediction - actual)
-
-            for i, err in enumerate(error):
-                if np.any(err > 100):  # Using np.any() to capture any target exceeding the threshold
-                    chromo_smiles = data.chromo_smiles[i]
-                    solvent_smiles = data.solvent_smiles[i]
-                    bad_smiles.append((chromo_smiles, solvent_smiles))
+            # error = np.abs(prediction - actual)
 
             # No need to reshape if your model output and targets are already in the correct shape
             predictions.append(output.cpu().numpy())
@@ -253,7 +247,72 @@ def test_model(model, test_loader, num_targets, target_names, solvent_feature_di
         plt.ylim([0, max_val])
         plt.show()
 
-    return bad_smiles
+    return actuals, predictions
+
+
+# def test_model(model, test_loader, num_targets, target_names, solvent_feature_dim):
+
+#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+#     model.to(device)
+
+#     model.eval() 
+#     predictions = []
+#     actuals = []
+
+#     bad_smiles = []
+#     good_smiles = []
+
+#     with torch.no_grad():
+#         for data in test_loader:
+#             data = data.to(device)
+#             output = model(data, solvent_feature_dim=solvent_feature_dim)
+
+#             prediction = output.cpu().numpy()
+#             actual = data.y.view(-1, 1).cpu().numpy()  # Adjust shape as necessary
+
+#             # Calculate error; adjust this based on your specific needs
+#             error = np.abs(prediction - actual)
+
+#             for i, err in enumerate(error):
+#                 if np.any(err > 120):  # Using np.any() to capture any target exceeding the threshold
+#                     chromo_smiles = data.chromo_smiles[i]
+#                     solvent_smiles = data.solvent_smiles[i]
+#                     bad_smiles.append((chromo_smiles, solvent_smiles))
+#                 elif np.any(err < 0.3):
+#                     chromo_smiles = data.chromo_smiles[i]
+#                     solvent_smiles = data.solvent_smiles[i]
+#                     good_smiles.append((chromo_smiles, solvent_smiles))
+
+#             # No need to reshape if your model output and targets are already in the correct shape
+#             predictions.append(output.cpu().numpy())
+#             actuals.append(data.y.view(-1, num_targets).cpu().numpy())  # Reshape targets to match output shape
+            
+#     predictions = np.vstack(predictions)  # Shape: [N, 3], where N is the number of samples
+#     actuals = np.vstack(actuals)  # Shape: [N, 3]
+    
+#     # Compute metrics for each output
+#     for i, name in enumerate(target_names):
+#         mae = mean_absolute_error(actuals[:, i], predictions[:, i])
+#         mse = mean_squared_error(actuals[:, i], predictions[:, i])
+#         rmse = np.sqrt(mse)
+#         r2 = r2_score(actuals[:, i], predictions[:, i])
+        
+#         print(f"{name}: MAE={mae:.4f}, MSE={mse:.4f}, RMSE={rmse:.4f}, R^2={r2:.4f}")
+        
+#         # Plotting
+#         plt.figure(figsize=(6, 6))
+#         plt.scatter(actuals[:, i], predictions[:, i], alpha=0.5)
+#         plt.xlabel('Actual Values')
+#         plt.ylabel('Predicted Values')
+#         plt.title(f'Actual vs Predicted Values for {name}')
+#         max_val = max(actuals[:, i].max(), predictions[:, i].max())
+#         plt.plot([0, max_val], [0, max_val], 'k--')  # Diagonal line indicating perfect predictions
+#         plt.xlim([0, max_val])
+#         plt.ylim([0, max_val])
+#         plt.show()
+
+#     return bad_smiles, good_smiles
     
 
 

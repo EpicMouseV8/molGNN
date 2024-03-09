@@ -11,9 +11,10 @@ def preprocess(df, target_columns):
     print("Preprocessing data...")
     
     # Drop rows where 'Solvent' is 'O'
-    # df = df[df['Solvent'] != 'O']
+    df = df[df['Solvent'] != 'O']
     
     # Drop rows with missing values in the target columns
+
     df = df.dropna(subset=target_columns)
 
     chromophores = df['Chromophore'].to_numpy()
@@ -71,14 +72,18 @@ def featurizeAsGraphs(chromophores, solvents, targets, save_filename):
         chromo_smiles = chromophores[i]
         solvent_smiles = solvents[i]
 
-        graph = Data(x_chromophore=node_featuresChromo, edge_index_chromophore=edge_indexChromo.t().contiguous(), edge_attr_chromophore=edge_featuresChromo,
-                     x_solvent=node_featuresSolvent, edge_index_solvent=edge_indexSolvent.t().contiguous(), edge_attr_solvent=edge_featuresSolvent, 
-                     chromo_smiles=chromo_smiles, solvent_smiles = solvent_smiles,  y=torch.tensor(targets[i], dtype=torch.float))
-        data.append(graph)
+        graph1 = Data(x=node_featuresChromo, edge_index=edge_indexChromo.t().contiguous(), edge_attr=edge_featuresChromo,
+                     chromo_smiles=chromo_smiles,   y=torch.tensor(targets[i], dtype=torch.float))
+        
+        graph2 = Data(x_solvent=node_featuresSolvent, edge_index_solvent=edge_indexSolvent.t().contiguous(), edge_attr_solvent=edge_featuresSolvent, 
+                      solvent_smiles = solvent_smiles)
+
+        data_list = [graph1, graph2]
+        data.append(data_list)
 
         # Save each graph object to a file
-        save_path = os.path.join(save_dir, f'graph_{i}.pt')
-        torch.save(graph, save_path)
+        # save_path = os.path.join(save_dir, f'graph_{i}.pt')
+        # torch.save(graph, save_path)
 
     return data
 

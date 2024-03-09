@@ -1,0 +1,9 @@
+Chromophore SMILES,Solvent SMILES
+CC(C)(C)c1cc(-c2c3cccc4c5cccc6c(-c7cc(C(C)(C)C)cc(C(C)(C)C)c7)c7cccc8c9cccc2c9c(c34)c(c65)c78)cc(C(C)(C)C)c1,Cc1ccccc1
+C1=Cc2nc1c(-c1cccs1)c1ccc([nH]1)c(-c1cccs1)c1nc(c(-c3cccs3)c3ccc([nH]3)c2-c2cccs2)C=C1,CN(C)C=O
+CC[N+]1=C(C=CC=CC=C2N(CCCCCC(=O)ON3C(=O)CCC3=O)c3ccc4c(S(=O)(=O)[O-])cc(S(=O)(=O)[O-])cc4c3C2(C)C)C(C)(C)c2c1ccc1c(S(=O)(=O)[O-])cc(S(=O)(=O)[O-])cc21.[Na+].[Na+].[Na+],O
+[O-]c1c(-c2ccccc2)cc(-[n+]2c(-c3ccccc3)cc(-c3ccccc3)cc2-c2ccccc2)cc1-c1ccccc1,CCCCCC
+[O-]c1c(-c2ccccc2)cc(-[n+]2c(-c3ccccc3)cc(-c3ccccc3)cc2-c2ccccc2)cc1-c1ccccc1,CC(=O)CC(C)C
+F[Si-](F)(c1c2ccccc2cc2ccccc12)(c1c2ccccc2cc2ccccc12)c1c2ccccc2cc2ccccc12,C1CCOC1
+[O-]c1c(-c2ccccc2)cc(-[n+]2c(-c3ccccc3)cc(-c3ccccc3)cc2-c2ccccc2)cc1-c1ccccc1,c1ccsc1
+CC1(C)CC[N+]2=c3c(cc4c(c31)Oc1cc3c(cc1C=4c1ccccc1C(=O)O)C(c1ccccc1C(=O)O)=c1cc4c5c(c1O3)C(C)(C)CC[N+]=5CCC4)CCC2,ClC(Cl)Cl

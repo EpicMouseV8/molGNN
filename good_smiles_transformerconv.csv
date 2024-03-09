@@ -1,0 +1,10 @@
+Chromophore SMILES,Solvent SMILES
+Cc1ccc(C2=C3C=CC(N(C)Cc4ccccc4)=[N+]3[B-](F)(F)n3cccc32)cc1,ClCCl
+CCC1=C(C)C2=C(C)c3cc(I)c(I)n3[B-](F)(F)[N+]2=C1C,CC(C)=O
+COC(=O)c1ccn2c(NC3CCCCC3)c(-c3ccc(S(=O)(=O)O)o3)nc2c1,CS(C)=O
+N#CC(C#N)=C(/C=C/c1ccc(N(c2ccccc2)c2ccccc2)cc1)c1ccc2c3c(cccc13)CC2,CC(C)=O
+Nc1ccc(C#Cc2ccc3ccc4ccc(C#Cc5ccc(N)cc5)c5ccc2c3c45)cc1,Cc1ccccc1
+CCC1(CC)c2cc(B(c3c(C)cc(C)cc3C)c3c(C)cc(C)cc3C)ccc2-c2ccc(N(c3ccccc3)c3ccc4c(c3)C(CC)(CC)c3cc(B(c5c(C)cc(C)cc5C)c5c(C)cc(C)cc5C)ccc3-4)cc21,CCCCCC
+CN1C(C(=O)Nc2ccccn2)=C(O)c2sccc2S1(=O)=O,CCCO
+CCC1=C(C)C(=O)n2c1cc1c(C)cc(C)n1c2=O,CO
+
