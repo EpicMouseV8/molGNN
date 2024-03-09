@@ -14,7 +14,7 @@ chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
 
 data = preprocess.featurize(chromophores, solvents, targetsVal, save_filename="qy128_transformer")
 
-train.run_training(data, epochs=3000, target_names=targets, model_name="transformer_gapgmp_abs_maxfp128")
+train.run_training(data, epochs=7000, target_names=targets, model_name="transformer_gapgmp_abs_maxfp128")
 
 
 # test
