@@ -11,7 +11,7 @@ def preprocess(df, target_columns):
     print("Preprocessing data...")
     
     # Drop rows where 'Solvent' is 'O'
-    df = df[df['Solvent'] != 'O']
+    # df = df[df['Solvent'] != 'O']
     
     # Drop rows with missing values in the target columns
 
