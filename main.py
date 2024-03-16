@@ -1,20 +1,51 @@
 import torch
-import model, preprocess, train
+import model, preprocess, train, test
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from torch_geometric.data import DataLoader
 import numpy as np
+import csv
 
-targets = ["Quantum yield"]
-file_path = 'data/raw/prep2.csv'
+# targets = ["Quantum yield"]
+# file_path = 'data/raw/prep2.csv'
 
-df = pd.read_csv(file_path)
 
-chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
+test_file_path = 'data/raw/CLM.csv'
+test_file_path2 = 'data/raw/transmolOurDatasetcombinedtop100.csv'
 
-data = preprocess.featurize(chromophores, solvents, targetsVal, save_filename="qy128_transformer")
+df = pd.read_csv(test_file_path2)
+# df.drop(index=df.index[500:], inplace=True)
 
-train.run_training(data, epochs=7000, target_names=targets, model_name="transformer_gapgmp_abs_maxfp128")
+
+data = preprocess.prepare_sampled_mols(df, save_filename="qy128_1")
+
+node_feature_dim = data[0].num_node_features
+edge_feature_dim = data[0].num_edge_features
+solvent_feature_dim = data[0].solvent_fingerprint.size(0)
+output_dim = 1
+model = model.ChromophoreSolventTransformerGNN(node_feature_dim, edge_feature_dim, solvent_feature_dim, output_dim)
+
+model_path = 'models/abs_maxfp128/abs_maxfp128epoch_800.pth'
+model_path = 'models/qyfp128_transformer/qyfp128_transformerepoch_6300.pth'
+
+model.load_state_dict(torch.load(model_path))
+
+loader = DataLoader(data, batch_size=32, shuffle=False)
+
+predictions = test.getpredictions(model, loader, solvent_feature_dim)
+
+df['Predicted Quantum yield'] = predictions
+
+df.to_csv('predictions.csv', index=True)
+
+print(df)
+
+
+# chromophores, solvents, targetsVal = preprocess.preprocess(df, targets)
+
+# data = preprocess.featurize(chromophores, solvents, targetsVal, save_filename="qy128_transformer")
+
+# train.run_training(data, epochs=7000, target_names=targets, model_name="transformer_gapgmp_abs_maxfp128")
 
 
 # test
@@ -38,7 +69,7 @@ train.run_training(data, epochs=7000, target_names=targets, model_name="transfor
 # data_train, data_test_val = train_test_split(data, test_size= 1 - train_ratio, random_state=0)
 # data_test, data_val = train_test_split(data_test_val, test_size=test_ratio/(test_ratio + validation_ratio), random_state=0)
 
-# train_loader = DataLoader(data_train, batch_size=32, shuffle=True)
+# train_loader = DataLoader(data_train, batch_size=32, shuffle=False)
 # val_loader = DataLoader(data_val, batch_size=32, shuffle=False)
 # test_loader = DataLoader(data_test, batch_size=32, shuffle=False)
 
